@@ -70,7 +70,7 @@ namespace SqlSugar
         /// 联表查询临时数据
         /// </summary>
         internal List<string> JoinTableValue = new List<string>();
-        
+
         #endregion
 
 
@@ -268,10 +268,146 @@ namespace SqlSugar
         /// <returns></returns>
         public Queryable<T2> Select<T2>(string select)
         {
-            return this.Select<T,T2>(select);
+            return this.Select<T, T2>(select);
+        }
+
+
+        /// <summary>
+        /// 不指定返回实体类型  最后返回Dynamic
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public Queryable<T> SelectDynamic(Expression<Func<T, object>> expression = null)
+        {
+            return this.Select(expression, expression == null ? null : expression.Body, typeof(T));
+            //return SelectParser(expression, expression == null ? null : expression.Body, typeof(T));
+        }
+        /// <summary>
+        /// 不指定返回实体类型  最后返回Dynamic
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public Queryable<T> SelectDynamic<T2>(Expression<Func<T, T2, object>> expression = null)
+        {
+            return this.Select(expression, expression == null ? null : expression.Body, typeof(T));
+        }
+        /// <summary>
+        /// 不指定返回实体类型  最后返回Dynamic
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public Queryable<T> SelectDynamic<T2, T3>(Expression<Func<T, T2, T3, object>> expression = null)
+        {
+            return this.Select(expression, expression == null ? null : expression.Body, typeof(T));
+        }
+        /// <summary>
+        /// 不指定返回实体类型  最后返回Dynamic
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public Queryable<T> SelectDynamic<T2, T3, T4>(Expression<Func<T, T2, T3, T4, object>> expression = null)
+        {
+            return this.Select(expression, expression == null ? null : expression.Body, typeof(T));
+        }
+        /// <summary>
+        /// 不指定返回实体类型  最后返回Dynamic
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <typeparam name="T5"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public Queryable<T> SelectDynamic<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, object>> expression = null)
+        {
+            return this.Select(expression, expression == null ? null : expression.Body, typeof(T));
+        }
+        /// <summary>
+        /// 不指定返回实体类型  最后返回Dynamic
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <typeparam name="T5"></typeparam>
+        /// <typeparam name="T6"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public Queryable<T> SelectDynamic<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, object>> expression = null)
+        {
+            return this.Select(expression, expression == null ? null : expression.Body, typeof(T));
+        }
+        /// <summary>
+        /// 不指定返回实体类型  最后返回Dynamic
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <typeparam name="T5"></typeparam>
+        /// <typeparam name="T6"></typeparam>
+        /// <typeparam name="T7"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public Queryable<T> SelectDynamic<T2, T3, T4, T5, T6, T7>(Expression<Func<T, T2, T3, T4, T5, T6, T7, object>> expression = null)
+        {
+            return this.Select(expression, expression == null ? null : expression.Body, typeof(T));
+        }
+        /// <summary>
+        /// 不指定返回实体类型  最后返回Dynamic
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <typeparam name="T5"></typeparam>
+        /// <typeparam name="T6"></typeparam>
+        /// <typeparam name="T7"></typeparam>
+        /// <typeparam name="T8"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public Queryable<T> SelectDynamic<T2, T3, T4, T5, T6, T7, T8>(Expression<Func<T, T2, T3, T4, T5, T6, T7, T8, object>> expression = null)
+        {
+            return this.Select(expression, expression == null ? null : expression.Body, typeof(T));
+        }
+        /// <summary>
+        /// 不指定返回实体类型  最后返回Dynamic
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <typeparam name="T5"></typeparam>
+        /// <typeparam name="T6"></typeparam>
+        /// <typeparam name="T7"></typeparam>
+        /// <typeparam name="T8"></typeparam>
+        /// <typeparam name="T9"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public Queryable<T> SelectDynamic<T2, T3, T4, T5, T6, T7, T8, T9>(Expression<Func<T, T2, T3, T4, T5, T6, T7, T8, T9, object>> expression = null)
+        {
+            return this.Select(expression, expression == null ? null : expression.Body, typeof(T));
+        }
+        /// <summary>
+        /// 不指定返回实体类型  最后返回Dynamic
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <typeparam name="T5"></typeparam>
+        /// <typeparam name="T6"></typeparam>
+        /// <typeparam name="T7"></typeparam>
+        /// <typeparam name="T8"></typeparam>
+        /// <typeparam name="T9"></typeparam>
+        /// <typeparam name="T10"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public Queryable<T> SelectDynamic<T2, T3, T4, T5, T6, T7, T8, T9, T10>(Expression<Func<T, T2, T3, T4, T5, T6, T7, T8, T9, T10, object>> expression = null)
+        {
+            return this.Select(expression, expression == null ? null : expression.Body, typeof(T));
         }
         #endregion
-
-
     }
 }

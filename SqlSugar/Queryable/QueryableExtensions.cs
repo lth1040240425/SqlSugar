@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections;
+using System.Reflection;
 
 namespace SqlSugar
 {
@@ -746,6 +747,111 @@ namespace SqlSugar
         }
 
         /// <summary>
+        /// 不指定返回类型 最后返回查询的字段  可转为Dynamic
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queryable"></param>
+        /// <param name="expression"></param>
+        /// <param name="expressionBody"></param>
+        /// <param name="ary"></param>
+        /// <returns></returns>
+        public static Queryable<T> Select<T>(this Queryable<T> queryable, Expression expression, Expression expressionBody, params Type[] ary)
+        {
+            var type = typeof(T);
+            Queryable<T> reval = new Queryable<T>()
+            {
+                DB = queryable.DB,
+                OrderByValue = queryable.OrderByValue,
+                Params = queryable.Params,
+                Skip = queryable.Skip,
+                Take = queryable.Take,
+                WhereValue = queryable.WhereValue,
+                TableName = queryable.TableName,
+                GroupByValue = queryable.GroupByValue,
+                //SelectValue = select
+            };
+            if (queryable.JoinTableValue.IsValuable())//有连表查询
+            {
+                reval.JoinTableValue = queryable.JoinTableValue;
+
+            }
+            if (expression == null)
+            {
+                reval.SelectValue = " * ";
+            }
+            else
+            {
+                if (expressionBody is NewExpression)
+                {
+                    NewExpression newExpression = expressionBody as NewExpression;
+                    StringBuilder sbSelectValue = new StringBuilder();
+
+                    for (int i = 0; i < newExpression.Arguments.Count; i++)
+                    {
+                        string MemberName = "";
+                        string pwName = "";
+                        string fieldName = "";
+                        MemberInfo mi = newExpression.Members[i];
+                        if (newExpression.Arguments[i] is MemberExpression)
+                        {
+                            MemberExpression m = newExpression.Arguments[i] as MemberExpression;
+                            MemberName = m.Member.Name;
+                            if (queryable.JoinTableValue.IsValuable())
+                            {
+                                ParameterExpression pw = m.Expression as ParameterExpression;
+                                pwName = pw.Name;
+                            }
+                        }
+                        else if (newExpression.Arguments[i] is ConstantExpression)
+                        {
+                            ConstantExpression ce = newExpression.Arguments[i] as ConstantExpression;
+                            string typeName = ce.Type.Name;
+                            if (typeName == "Int32" || typeName == "Double" || typeName == "Decimal" || typeName == "Single")
+                            {
+                                MemberName = ce.Value.ToString();
+                            }
+                            else if (typeName == "Char")
+                            {
+                                MemberName = "'" + ce.Value.ToString() + "'";
+                            }
+                            else if (typeName == "Boolean")
+                            {
+                                MemberName = ce.Value.ObjToBool() ? "1" : "0";
+                            }
+                            else if (typeName == "DateTime")
+                            {
+                                MemberName = ce.Value.ObjToDate().ToString("yyyy-MM-dd HH:mm:ss");
+                            }
+
+                            else
+                            {
+                                MemberName = "'" + ce.Value.ToString() + "'";
+                            }
+
+                        }
+                        fieldName = MemberName;
+                        if (!string.IsNullOrWhiteSpace(pwName))
+                        {
+                            fieldName = pwName + "." + fieldName;
+                        }
+                        if (MemberName == mi.Name)
+                        {
+                            sbSelectValue.Append(fieldName + ",");
+                        }
+                        else
+                        {
+                            sbSelectValue.Append(string.Format("{0}={1}", mi.Name, fieldName) + ",");
+                        }
+                    }
+                    reval.SelectValue = sbSelectValue.ToString().Substring(0, sbSelectValue.ToString().Length - 1);
+                }
+            }
+
+
+            return reval;
+        }
+
+        /// <summary>
         /// 将select的字段映射到T对象
         /// </summary>
         /// <typeparam name="T">数据实体类型</typeparam>
@@ -1100,6 +1206,19 @@ namespace SqlSugar
             pageCount = queryable.Count();
             return reval;
         }
+
+        /// <summary>
+        /// 将Queryable转换为Dynamic集合<Dynamic>
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="queryable">查询对象</param>
+        /// <returns>dynamic</returns>
+        public static List<dynamic> ToDynamicList<T>(this Queryable<T> queryable)
+        {
+
+            return JsonConverter.ConvertDataTable(ToDataTable<T>(queryable));
+        }
+
 
         /// <summary>
         /// 联表查询
